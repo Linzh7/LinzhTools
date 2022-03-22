@@ -43,7 +43,7 @@ def gray2Color(color_dict, gray_path, color_path):
 
         gt_color = cv2.cvtColor(gt_color, cv2.COLOR_RGB2BGR)
         cv2.imwrite(gt_color_path, gt_color,)
-        process_show(index+1, len(gt_list))
+        processShow(index+1, len(gt_list))
     print(time.time()-t1)
 
 
@@ -74,7 +74,7 @@ def color2Gray(color_dict, color_path, gray_path, ):
             gt_gray[cls_pos] = cls_index
 
         cv2.imwrite(gt_gray_path, gt_gray)
-        process_show(index + 1, len(gt_list))
+        processShow(index + 1, len(gt_list))
     print(time.time() - t1)
 
 
@@ -105,7 +105,7 @@ def color2FakeColor(color_dict, color_path, gray_path, ):
             gt_gray[cls_pos] = cls_index
 
         cv2.imwrite(gt_gray_path, gt_gray)
-        process_show(index + 1, len(gt_list))
+        processShow(index + 1, len(gt_list))
     print(time.time() - t1)
 
 
@@ -148,7 +148,7 @@ def color2Binary(color_dict, color_path, gray_path, ):
             gt_gray[cls_pos] = 255
             gt_gray_path = os.path.join(gray_path, str(cls_index), gt_name)
             cv2.imwrite(gt_gray_path, gt_gray)
-        process_show(index + 1, len(gt_list))
+        processShow(index + 1, len(gt_list))
         # break
     print(time.time() - t1)
 
@@ -208,4 +208,3 @@ def processShow(num, nums, pre_fix='', suf_fix=''):
         (pre_fix, num, nums, '#' * (int(ratenum) // 5), '_' * (20 - (int(ratenum) // 5)), ratenum, suf_fix)
     sys.stdout.write(bar)
     sys.stdout.flush()
-

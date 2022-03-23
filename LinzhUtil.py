@@ -14,6 +14,7 @@
 import os
 from pathlib import Path
 import shutil
+from tqdm import tqdm
 
 
 def movePairFile(src1, src2, dst1, dst2=None):
@@ -40,20 +41,23 @@ def movePairFile(src1, src2, dst1, dst2=None):
 
 
 def removeFile(path, pattern):
-    for i in Path(path).rglob(pattern):
+    fileList = Path(path).rglob(pattern)
+    for i in tqdm(fileList):
         print(f'[LinzhUtil] Removing {i}...')
         os.remove(i)
 
 
 def moveFileTo(src, dst, fileNamePattern):
-    for i in Path(src).rglob(fileNamePattern):
+    fileList = Path(src).rglob(fileNamePattern)
+    for i in tqdm(fileList):
         fileName = str(i).split('\\')[-1]
         print(f'[LinzhUtil] Moving {i}...')
         shutil.move(i, f'{os.path.join(dst, fileName)}')
 
 
 def moveFileTo_DEBUG(src, dst, fileNamePattern):
-    for i in Path(src).rglob(fileNamePattern):
+    fileList = Path(src).rglob(fileNamePattern)
+    for i in tqdm(fileList):
         fileName = str(i).split('\\')[-1]
         print(f'[LinzhUtil] Moving {i}...')
         shutil.move(i, f'{os.path.join(dst, fileName)}')
@@ -61,14 +65,16 @@ def moveFileTo_DEBUG(src, dst, fileNamePattern):
 
 
 def copyFileTo(src, dst, fileNamePattern):
-    for i in Path(src).rglob(fileNamePattern):
+    fileList = Path(src).rglob(fileNamePattern)
+    for i in tqdm(fileList):
         fileName = str(i).split('\\')[-1]
         print(f'[LinzhUtil] Copying {i}...')
         shutil.copyfile(i, f'{os.path.join(dst, fileName)}')
 
 
 def copyFileTo_DEBUG(src, dst, fileNamePattern):
-    for i in Path(src).rglob(fileNamePattern):
+    fileList = Path(src).rglob(fileNamePattern)
+    for i in tqdm(fileList):
         fileName = str(i).split('\\')[-1]
         print(f'[LinzhUtil] Copying {i}...')
         shutil.copyfile(i, f'{os.path.join(dst, fileName)}')
@@ -86,7 +92,7 @@ def printNotInstance(ls, type):
 
 def filesRename(folderPath, addName):
     fileList = getFileList(folderPath)
-    for fileName in fileList:
+    for fileName in tqdm(fileList):
         os.rename(folderPath+fileName, folderPath+addName+fileName)
 
 
@@ -105,13 +111,13 @@ def get_file_content(filePath):
         return fp.read()
 
 
-def MoveDoneFiles(FOLDER_PATH):
-    fileList = getFileList(FOLDER_PATH)
-    fileList.sort()
-    for fileName in fileList:
-        fileNameWithout = fileName.split('.')[0]
-        if(os.path.exists(FOLDER_PATH+fileNameWithout+'.xml') and os.path.exists(FOLDER_PATH+fileNameWithout+'.xml')):
-            os.system('mv {0}{1} {0}done/'.format(FOLDER_PATH, fileNameWithout + '.xml'))
-            os.system('mv {0}{1} {0}done/'.format(FOLDER_PATH, fileNameWithout + '.jpg'))
-            print('{0} moved.'.format(fileNameWithout))
-    print('All moved.')
+# def MoveDoneFiles(FOLDER_PATH):
+#     fileList = getFileList(FOLDER_PATH)
+#     fileList.sort()
+#     for fileName in tqdm(fileList):
+#         fileNameWithout = fileName.split('.')[0]
+#         if(os.path.exists(FOLDER_PATH+fileNameWithout+'.xml') and os.path.exists(FOLDER_PATH+fileNameWithout+'.xml')):
+#             os.system('mv {0}{1} {0}done/'.format(FOLDER_PATH, fileNameWithout + '.xml'))
+#             os.system('mv {0}{1} {0}done/'.format(FOLDER_PATH, fileNameWithout + '.jpg'))
+#             print('{0} moved.'.format(fileNameWithout))
+#     print('All moved.')

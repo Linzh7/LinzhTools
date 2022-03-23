@@ -16,7 +16,9 @@ from pathlib import Path
 import shutil
 
 
-def movePairFile(src1, src2, dst):
+def movePairFile(src1, src2, dst1, dst2=None):
+    if dst2 == None:
+        dst2 = dst1
     fileList1 = getFileList(src1)
     fileList2 = getFileList(src2)
     fileList1.sort()
@@ -27,8 +29,8 @@ def movePairFile(src1, src2, dst):
         name1 = fileList1[i].split('.')[0]
         name2 = fileList2[j].split('.')[0]
         if name1 == name2:
-            shutil.move(f'{os.path.join(src1, fileList1[i])}', f'{os.path.join(dst, fileList1[i])}')
-            shutil.move(f'{os.path.join(src2, fileList2[j])}', f'{os.path.join(dst, fileList2[j])}')
+            shutil.move(f'{os.path.join(src1, fileList1[i])}', f'{os.path.join(dst1, fileList1[i])}')
+            shutil.move(f'{os.path.join(src2, fileList2[j])}', f'{os.path.join(dst2, fileList2[j])}')
             i += 1
             j += 1
         elif name1 < name2:

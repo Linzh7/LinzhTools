@@ -106,18 +106,6 @@ def getFolderList(path):
         return folder
 
 
-def get_file_content(filePath):
+def getFileContent(filePath):
     with open(filePath, 'rb') as fp:
         return fp.read()
-
-
-# def MoveDoneFiles(FOLDER_PATH):
-#     fileList = getFileList(FOLDER_PATH)
-#     fileList.sort()
-#     for fileName in tqdm(fileList):
-#         fileNameWithout = fileName.split('.')[0]
-#         if(os.path.exists(FOLDER_PATH+fileNameWithout+'.xml') and os.path.exists(FOLDER_PATH+fileNameWithout+'.xml')):
-#             os.system('mv {0}{1} {0}done/'.format(FOLDER_PATH, fileNameWithout + '.xml'))
-#             os.system('mv {0}{1} {0}done/'.format(FOLDER_PATH, fileNameWithout + '.jpg'))
-#             print('{0} moved.'.format(fileNameWithout))
-#     print('All moved.')

@@ -106,3 +106,4 @@ if __name__ == '__main__':
     print('Writing...')
     for i in tqdm(postsList):
         i.toFile()
+    print(ErrorList)

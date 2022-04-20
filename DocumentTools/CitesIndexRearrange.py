@@ -1,8 +1,16 @@
 import re
 from docx import Document
 
+# DO NOT REPLACE THE ORIGIN DATA, OR YOU WILL LOSE YOUR IMAGES.
+# it may be fixed in future
+
 path = 'xxx.docx'
 newPath = 'new_' + path
+
+if path == newPath:
+    print("\nError!\nDo NOT replace the origin document.\n")
+    exit()
+
 citePattern = r"\[[-,\d]+\]"
 citesReplaceDic = {}
 

@@ -45,6 +45,14 @@ if __name__ == '__main__':
     Document = Document(path)
 
     for paragraph in Document.paragraphs:
+        if not paragraph.text:
+            continue
+        # if paragraph.text[0] == '[':
+        #     result = re.match(citePattern, paragraph.text[0:4])
+        #     if result:
+        #         index = int(result.group()[1:-1])
+        #         if index not in citesIndexDic.keys():
+        #             citesReplaceDic[index] = 999999
         citesStringList = re.findall(citePattern, paragraph.text)
         for citesString in citesStringList:
             citesString = citesString[1:-1]

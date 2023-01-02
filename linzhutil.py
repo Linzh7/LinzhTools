@@ -26,12 +26,14 @@ def movePairFile(src1, src2, dst1, dst2=None):
     fileList2.sort()
     i = 0
     j = 0
-    while(i < len(fileList1) or j < len(fileList2)):
+    while (i < len(fileList1) or j < len(fileList2)):
         name1 = fileList1[i].split('.')[0]
         name2 = fileList2[j].split('.')[0]
         if name1 == name2:
-            shutil.move(f'{os.path.join(src1, fileList1[i])}', f'{os.path.join(dst1, fileList1[i])}')
-            shutil.move(f'{os.path.join(src2, fileList2[j])}', f'{os.path.join(dst2, fileList2[j])}')
+            shutil.move(f'{os.path.join(src1, fileList1[i])}',
+                        f'{os.path.join(dst1, fileList1[i])}')
+            shutil.move(f'{os.path.join(src2, fileList2[j])}',
+                        f'{os.path.join(dst2, fileList2[j])}')
             i += 1
             j += 1
         elif name1 < name2:
@@ -93,12 +95,20 @@ def printNotInstance(ls, type):
 def filesRename(folderPath, addName):
     fileList = getFileList(folderPath)
     for fileName in tqdm(fileList):
-        os.rename(folderPath+fileName, folderPath+addName+fileName)
+        os.rename(folderPath + fileName, folderPath + addName + fileName)
 
 
 def getFileList(path):
     for a, b, file in os.walk(path):
         return file
+
+
+def getAllFileList(path):
+    ls = []
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            ls.append(os.path.join(root, file))
+    return ls
 
 
 def getFolderList(path):

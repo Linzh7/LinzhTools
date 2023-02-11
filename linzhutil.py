@@ -66,6 +66,10 @@ def moveFileTo_DEBUG(src, dst, fileNamePattern):
         break
 
 
+def getFileListFromPattern(path, pattern):
+    return Path(path).rglob(pattern)
+
+
 def copyFileTo(src, dst, fileNamePattern):
     fileList = Path(src).rglob(fileNamePattern)
     for i in tqdm(fileList):

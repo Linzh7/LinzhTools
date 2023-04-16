@@ -103,8 +103,9 @@ def filesRename(folderPath, addName):
 
 
 def getFileList(path):
-    for a, b, file in os.walk(path):
-        return file
+    files = os.listdir(directory)
+    filtered_files = [f for f in files if not f.startswith('.')]
+    return filtered_files
 
 
 def getAllFileList(path):
@@ -116,8 +117,7 @@ def getAllFileList(path):
 
 
 def getFolderList(path):
-    for a, folder, c in os.walk(path):
-        return folder
+    return [name for name in os.listdir(path) if os.path.isdir(os.path.join(path, name))]
 
 
 def getFileContent(filePath):

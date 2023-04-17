@@ -3,30 +3,38 @@ from pathlib import Path
 import shutil
 from tqdm import tqdm
 
-def isFolderEmpty(folderPath):
-    return len(os.listdir(folderPath)) == 0
 
-def checkDir(path):
+def is_folder_empty(folder_path):
+    """Check if a folder is empty."""
+    return len(os.listdir(folder_path)) == 0
+
+
+def ensure_directory_exists(path):
+    """Create a directory if it doesn't exist."""
     if not os.path.exists(path):
         os.makedirs(path)
 
-def movePairFile(src1, src2, dst1, dst2=None):
-    if dst2 == None:
+
+def move_pair_files(src1, src2, dst1, dst2=None):
+    """
+    Move files from src1 and src2 to dst1 and dst2 respectively, if they have the same file name (excluding extension).
+    """
+    if dst2 is None:
         dst2 = dst1
-    fileList1 = getFileList(src1)
-    fileList2 = getFileList(src2)
-    fileList1.sort()
-    fileList2.sort()
+    file_list1 = get_file_list(src1)
+    file_list2 = get_file_list(src2)
+    file_list1.sort()
+    file_list2.sort()
     i = 0
     j = 0
-    while (i < len(fileList1) or j < len(fileList2)):
-        name1 = fileList1[i].split('.')[0]
-        name2 = fileList2[j].split('.')[0]
+    while i < len(file_list1) or j < len(file_list2):
+        name1 = file_list1[i].split('.')[0]
+        name2 = file_list2[j].split('.')[0]
         if name1 == name2:
-            shutil.move(f'{os.path.join(src1, fileList1[i])}',
-                        f'{os.path.join(dst1, fileList1[i])}')
-            shutil.move(f'{os.path.join(src2, fileList2[j])}',
-                        f'{os.path.join(dst2, fileList2[j])}')
+            shutil.move(os.path.join(src1, file_list1[i]),
+                        os.path.join(dst1, file_list1[i]))
+            shutil.move(os.path.join(src2, file_list2[j]),
+                        os.path.join(dst2, file_list2[j]))
             i += 1
             j += 1
         elif name1 < name2:
@@ -35,86 +43,81 @@ def movePairFile(src1, src2, dst1, dst2=None):
             j += 1
 
 
-def removeFile(path, pattern):
-    fileList = Path(path).rglob(pattern)
-    for i in tqdm(fileList):
-        print(f'[LinzhUtil] Removing {i}...')
+def remove_files(path, pattern):
+    """Remove files that match a given pattern."""
+    file_list = Path(path).rglob(pattern)
+    for i in tqdm(file_list):
+        print(f'[UtilsToolkit] Removing {i}...')
         os.remove(i)
 
 
-def moveFileTo(src, dst, fileNamePattern):
-    if not isFolderEmpty(dst):
-        confirm = input(f"WARNING: {dst} is not empty. Do you want to proceed? (y/n) ")
+def move_files_to(src, dst, file_name_pattern):
+    """
+    Move files from src to dst directory that match the given file name pattern.
+    """
+    if not is_folder_empty(dst):
+        confirm = input(
+            f"WARNING: {dst} is not empty. Do you want to proceed? (y/n) ")
         if confirm.lower() != 'y':
             print("Aborting move operation")
             return
-    checkDir(dst)
-    fileList = getFileListFromPattern(src)
-    fileCount = len(list(fileList))
-    if fileCount == 0:
-        print(f"No files found in {src} that match pattern {fileNamePattern}")
+    ensure_directory_exists(dst)
+    file_list = get_files_from_pattern(src, file_name_pattern)
+    file_count = len(list(file_list))
+    if file_count == 0:
+        print(
+            f"No files found in {src} that match pattern {file_name_pattern}")
         return
-    print(f"Found {fileCount} files in {src} that match pattern {fileNamePattern}")
-    for i in tqdm(list(fileList)):
-        fileName = str(i).split('/')[-1]
-        shutil.move(i, f'{os.path.join(dst, fileName)}')
+    print(
+        f"Found {file_count} files in {src} that match pattern {file_name_pattern}"
+    )
+    for i in tqdm(list(file_list)):
+        file_name = str(i).split('/')[-1]
+        shutil.move(i, os.path.join(dst, file_name))
 
 
-def moveFileTo(src, dst, fileNamePattern):
-    if not isFolderEmpty(dst):
-        confirm = input(f"WARNING: {dst} is not empty. Do you want to proceed? (y/n) ")
-        if confirm.lower() != 'y':
-            print("Aborting move operation")
-            return
-    checkDir(dst)
-    fileList = getFileListFromPattern(src)
-    fileCount = len(list(fileList))
-    if fileCount == 0:
-        print(f"No files found in {src} that match pattern {fileNamePattern}")
-        return
-    print(f"Found {fileCount} files in {src} that match pattern {fileNamePattern}")
-    for i in tqdm(list(fileList)):
-        fileName = str(i).split('/')[-1]
-        shutil.move(i, f'{os.path.join(dst, fileName)}')
-
-def getFileListFromPattern(path, pattern):
+def get_files_from_pattern(path, pattern):
+    """Get a list of files that match a given pattern."""
     return Path(path).rglob(pattern)
 
-def printNotInstance(ls, type):
+
+def print_not_instance(ls, type):
+    """Print elements of a list that are not instances of a given type."""
     for i in ls:
         if not isinstance(i, type):
             try:
                 type(i)
             except Exception as e:
-                print("Error: {}".format(e))
+                print(f"Error: {e}")
 
 
-def filesRename(folderPath, addName):
-    fileList = getFileList(folderPath)
-    for fileName in tqdm(fileList):
-        os.rename(folderPath + fileName, folderPath + addName + fileName)
+def rename_files(folder_path, add_name):
+    """Rename all files in a folder by adding a prefix."""
+    file_list = get_file_list(folder_path)
+    for file_name in tqdm(file_list):
+        os.rename(os.path.join(folder_path, file_name),
+                  os.path.join(folder_path, f"{add_name}{file_name}"))
 
 
-def getFileList(path):
-    files = os.listdir(path)
-    filtered_files = [f for f in files if not f.startswith('.')]
-    return filtered_files
+def get_file_list(path):
+    """Get a list of files in a directory, excluding hidden files."""
+    return [
+        f.name for f in Path(path).iterdir()
+        if f.is_file() and not f.name.startswith('.')
+    ]
 
 
-def getAllFileList(path):
-    ls = []
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            ls.append(os.path.join(root, file))
-    return ls
+def get_all_file_list(path):
+    """Get a list of all files, including those in subdirectories."""
+    return [str(f) for f in Path(path).rglob('*') if f.is_file()]
 
 
-def getFolderList(path):
-    return [name for name in os.listdir(path) if os.path.isdir(os.path.join(path, name))]
+def get_folder_list(path):
+    """Get a list of folders in a directory."""
+    return [f.name for f in Path(path).iterdir() if f.is_dir()]
 
 
-def getFileContent(filePath):
-    with open(filePath, 'rb') as fp:
-        return fp.read()
-
-
+# def get_file_content(file_path):
+#     """Read and return the content of a file."""
+#     with open(file_path, 'rb') as fp:
+#         return fp.read()

@@ -43,42 +43,42 @@ def removeFile(path, pattern):
 
 
 def moveFileTo(src, dst, fileNamePattern):
+    if not isFolderEmpty(dst):
+        confirm = input(f"WARNING: {dst} is not empty. Do you want to proceed? (y/n) ")
+        if confirm.lower() != 'y':
+            print("Aborting move operation")
+            return
     checkDir(dst)
-    fileList = Path(src).rglob(fileNamePattern)
-    for i in tqdm(fileList):
+    fileList = getFileListFromPattern(src)
+    fileCount = len(list(fileList))
+    if fileCount == 0:
+        print(f"No files found in {src} that match pattern {fileNamePattern}")
+        return
+    print(f"Found {fileCount} files in {src} that match pattern {fileNamePattern}")
+    for i in tqdm(list(fileList)):
         fileName = str(i).split('/')[-1]
         shutil.move(i, f'{os.path.join(dst, fileName)}')
 
 
-def moveFileTo_DEBUG(src, dst, fileNamePattern):
-    fileList = Path(src).rglob(fileNamePattern)
-    for i in tqdm(fileList):
-        fileName = str(i).split('\\')[-1]
-        print(f'[LinzhUtil] Moving {i}...')
+def moveFileTo(src, dst, fileNamePattern):
+    if not isFolderEmpty(dst):
+        confirm = input(f"WARNING: {dst} is not empty. Do you want to proceed? (y/n) ")
+        if confirm.lower() != 'y':
+            print("Aborting move operation")
+            return
+    checkDir(dst)
+    fileList = getFileListFromPattern(src)
+    fileCount = len(list(fileList))
+    if fileCount == 0:
+        print(f"No files found in {src} that match pattern {fileNamePattern}")
+        return
+    print(f"Found {fileCount} files in {src} that match pattern {fileNamePattern}")
+    for i in tqdm(list(fileList)):
+        fileName = str(i).split('/')[-1]
         shutil.move(i, f'{os.path.join(dst, fileName)}')
-        break
-
 
 def getFileListFromPattern(path, pattern):
     return Path(path).rglob(pattern)
-
-
-def copyFileTo(src, dst, fileNamePattern):
-    fileList = Path(src).rglob(fileNamePattern)
-    for i in tqdm(fileList):
-        fileName = str(i).split('\\')[-1]
-        print(f'[LinzhUtil] Copying {i}...')
-        shutil.copyfile(i, f'{os.path.join(dst, fileName)}')
-
-
-def copyFileTo_DEBUG(src, dst, fileNamePattern):
-    fileList = Path(src).rglob(fileNamePattern)
-    for i in tqdm(fileList):
-        fileName = str(i).split('\\')[-1]
-        print(f'[LinzhUtil] Copying {i}...')
-        shutil.copyfile(i, f'{os.path.join(dst, fileName)}')
-        break
-
 
 def printNotInstance(ls, type):
     for i in ls:
@@ -96,7 +96,7 @@ def filesRename(folderPath, addName):
 
 
 def getFileList(path):
-    files = os.listdir(directory)
+    files = os.listdir(path)
     filtered_files = [f for f in files if not f.startswith('.')]
     return filtered_files
 

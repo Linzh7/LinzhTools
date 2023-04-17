@@ -1,21 +1,14 @@
-###############################################################################
-##
-# Manual of Linzh's Util
-##
-# 1. Use '/' instead of '\\' in path stringf or rewrite some functions.
-##
-##
-###############################################################################
-
-# Divide Dataset
-# from sklearn.model_selection import train_test_split
-# x_train,x_test, y_train, y_test = train_test_split(train_data,train_target,test_size=0.3, random_state=0)
-
 import os
 from pathlib import Path
 import shutil
 from tqdm import tqdm
 
+def isFolderEmpty(folderPath):
+    return len(os.listdir(folderPath)) == 0
+
+def checkDir(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
 
 def movePairFile(src1, src2, dst1, dst2=None):
     if dst2 == None:
@@ -50,10 +43,10 @@ def removeFile(path, pattern):
 
 
 def moveFileTo(src, dst, fileNamePattern):
+    checkDir(dst)
     fileList = Path(src).rglob(fileNamePattern)
     for i in tqdm(fileList):
-        fileName = str(i).split('\\')[-1]
-        print(f'[LinzhUtil] Moving {i}...')
+        fileName = str(i).split('/')[-1]
         shutil.move(i, f'{os.path.join(dst, fileName)}')
 
 
@@ -125,6 +118,3 @@ def getFileContent(filePath):
         return fp.read()
 
 
-def checkDir(path):
-    if not os.path.exists(path):
-        os.makedirs(path)
